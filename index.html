@@ -1,0 +1,1207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script type="text/javascript" language="javascript" >
+        // JavaScript Document
+        var IB=new Object;
+        var isIE = document.all;
+        var xMousePos=0;
+        var yMousePos=0;
+        var UserDatas='';
+        var UserArray=new Array();
+        // Global variables
+        document.onmousemove = pointeurDeplace
+
+        var EVAL_PRODUCT_ID= function (obj) {
+            alert(obj.responseText);
+        }
+
+        function PostEvalForm(product_id){
+            var NOM=document.getElementById('NOM').value;
+            var PRENOM=document.getElementById('PRENOM').value;
+            var SOCIETE=document.getElementById('SOCIETE').value;
+            var EMAIL=document.getElementById('EMAIL').value;
+            var TEL_DIRECT=document.getElementById('TEL_DIRECT').value;
+            if(NOM.length==0){alert('Veuillez indiquer votre nom...');return false;}
+            if(PRENOM.length==0){alert('Veuillez indiquer votre prenom...');return false;}
+            if(SOCIETE.length==0){alert('Veuillez indiquer le nom de votre societe...');return false;}
+            if(EMAIL.length==0){alert("Nous ne pourrons pas vous envoyer la clef d'evaluation \n si votre adresse eMail n'est pas renseignee");return false;}
+            if(TEL_DIRECT.length==0){alert("Nous ne pourrons pas vous envoyer la clef d'evaluation \n si votre numأƒآ©ro de telephone n'est pas renseigne");return false;}
+            var XHR = new XHRConnection();
+            XHR.appendData('NOM', NOM);
+            XHR.appendData('PRENOM', PRENOM);
+            XHR.appendData('SOCIETE', SOCIETE);
+            XHR.appendData('EMAIL', EMAIL);
+            XHR.appendData('EVAL_PRODUCT_ID', product_id);
+            XHR.appendData('TEL_DIRECT', TEL_DIRECT);
+            XHR.sendAndLoad('index.php', "POST",EVAL_PRODUCT_ID);
+        }
+
+        function EvalForm(product_id){
+            document.getElementById("zone").style.width='450px';
+            document.getElementById("zone").style.height='auto';
+            document.getElementById("zone").style.top='100px';
+            document.getElementById("zone").style.left='500px';
+            document.getElementById("zone").style.zIndex='3000';
+            document.getElementById("zone").style.visibility="visible";
+            var XHR = new XHRConnection();
+            XHR.setRefreshArea('zone');
+            XHR.appendData('EVAL_FORM', product_id);
+            XHR.sendAndLoad('index.php', "GET");
+        }
+
+        function ShowVideo(path,swidth,sHeight){
+
+            var myDomain = document.domain;
+            var XHR = new XHRConnection();
+            XHR.appendData('BuildVideo', path);
+            document.getElementById('zone').style.visibility="visible";
+            document.getElementById('zone').style.top="90px";
+            document.getElementById('zone').style.left="10px";
+            document.getElementById('zone').style.width=swidth + 'px';
+            document.getElementById('zone').style.height=sHeight + 'px';
+            document.getElementById('zone').style.zIndex="3000";
+            XHR.setRefreshArea('zone');
+            XHR.sendAndLoad('http://' + myDomain + '/index.php', 'GET');
+        }
+
+
+        function pointeurDeplace(e){
+            xMousePos=pointeurX(e);
+            yMousePos = pointeurY(e);
+
+        }
+
+        function swapimage(md,pic){
+            document.getElementById(md).src=pic;
+        }
+
+        var redac_add_article_listener= function (obj) {
+            var tutorial_id=obj.responseText;
+            alert('Vous allez أƒآھtre redirigأƒآ© vers le nouvel article numأƒآ©ro: '+ tutorial_id + '\nCet article أƒ  أƒآ©tأƒآ© classأƒآ© dans la section nouveaux articles');
+            document.location.href='index.php?EditID=' + tutorial_id;
+        }
+
+        function RedactorAddNewArticle(){
+            if(confirm('Do you want to add a new article ?')){
+                var XHR = new XHRConnection();
+                XHR.appendData('RedactorAddNewArticle', 'yes');
+                XHR.sendAndLoad('index.php', "GET",redac_add_article_listener);
+            }
+
+
+        }
+
+        //----------------------- PHPBB ----------------------------------------------------
+
+        var response_template_bandeau= function (obj) {
+            document.getElementById('TopContent').style.backgroundImage="url("+obj.responseText +")";
+        }
+
+        function template_faqs_menus_gauche(){
+            var myDomain = document.domain;
+            var URL="http://" + myDomain + "/index.php?faqs_menus_gauche=yes";
+            var XHR = new XHRConnection();
+            XHR.setRefreshArea('faqs_menus_gauche');
+            XHR.sendAndLoad(URL,"GET");
+
+
+        }
+
+        function template_top_content(){
+            var myDomain = document.domain;
+            var URL="http://" + myDomain + "/index.php?TopContent=yes";
+            var XHR = new XHRConnection();
+            XHR.setRefreshArea('TopContent');
+            XHR.sendAndLoad(URL,"GET");
+            template_bandeau();
+            template_navigation();
+            template_faqs_menus_gauche();
+            //template_design_left_menus();
+        }
+        function template_bandeau(){
+            var myDomain = document.domain;
+            var URL="http://" + myDomain + "/index.php?template_bandeau=yes";
+            var XHR = new XHRConnection();
+            XHR.sendAndLoad(URL,"GET",response_template_bandeau);
+        }
+
+        function template_navigation(){
+            var myDomain = document.domain;
+            var URL="http://" + myDomain + "/index.php?template_navigation=yes&forum=yes";
+            var XHR = new XHRConnection();
+            XHR.setRefreshArea('top_nav');
+            XHR.sendAndLoad(URL,"GET");
+        }
+
+        function template_design_left_menus(){
+            var myDomain = document.domain;
+            var URL="http://" + myDomain + "/index.php?template_menus_gauche=yes&forum=yes";
+            var XHR = new XHRConnection();
+            XHR.setRefreshArea('design_left_menus');
+            XHR.sendAndLoad(URL,"GET");
+        }
+
+        function design_fill_body_foot(){
+            var myDomain = document.domain;
+            var URL="http://" + myDomain + "/index.php?design_fill_body_foot=yes";
+            var XHR = new XHRConnection();
+            XHR.setRefreshArea('foot_forum');
+            XHR.sendAndLoad(URL,"GET");
+        }
+
+
+        function design_fill_top(){
+            var myDomain = document.domain;
+            var URL="http://" + myDomain + "/index.php?design_fill_top=yes";
+            var XHR = new XHRConnection();
+            XHR.setRefreshArea('TopContent');
+            XHR.sendAndLoad(URL,"GET");
+        }
+
+        function design_fill_bottom(){
+            var myDomain = document.domain;
+            var URL="http://" + myDomain + "/index.php?design_fill_bottom=yes";
+            var XHR = new XHRConnection();
+            XHR.setRefreshArea('bottomBody');
+            XHR.sendAndLoad(URL,"GET");
+        }
+
+        function design_fill_top_nav(){
+            var myDomain = document.domain;
+            var URL="http://" + myDomain + "/index.php?design_fill_top_nav=forum";
+            var XHR = new XHRConnection();
+            XHR.setRefreshArea('top_nav');
+            XHR.sendAndLoad(URL,"GET");
+        }
+
+        function design_fill_left_menus(){
+            var myDomain = document.domain;
+            var URL="http://" + myDomain + "/index.php?design_fill_left_menus=yes";
+            var XHR = new XHRConnection();
+            XHR.setRefreshArea('design_left_menus');
+            XHR.sendAndLoad(URL,"GET");
+        }
+
+
+        var AjaxPhpBBUsername= function (obj) {
+            UserDatas=obj.responseText;
+        }
+
+        function PhpBBAuthentified(){
+            if(VerifyPhpBBUsername()==true){
+                if (UserArray["session_logged_in"]==1){
+                    Set_Cookie('phpbb_logged','1',1,'/','','');
+                    Set_Cookie('phpbb_userid',UserArray["user_id"],1,'/','','');
+                    Set_Cookie('phpbb_email',UserArray["user_email"],1,'/','','');
+                    Set_Cookie('phpbb_nickname',UserArray["username"],1,'/','','');
+                }else{
+                    deleteCookie('phpbb_logged','/','');
+                    deleteCookie('phpbb_userid','/','');
+                    deleteCookie('phpbb_email','/','');
+                    deleteCookie('phpbb_nickname','/','');
+                }
+            }
+        }
+
+        function deleteCookie( name, path, domain ) {
+            if ( Get_Cookie( name ) ) document.cookie = name + '=' +( ( path ) ? ';path=' + path : '') +( ( domain ) ? ';domain=' + domain : '' ) +';expires=Thu, 01-Jan-1970 00:00:01 GMT';
+        }
+
+        function VerifyPhpBBUsername(){
+            var i;
+            var arrtmp;
+            var usrARR;
+            var XHR = new XHRConnection();
+            var myDomain = document.domain;
+            var URL="http://" + myDomain + "/forum/isLogged.php";
+            XHR.sendAndLoad(URL, "GET",AjaxPhpBBUsername);
+            usrARR=UserDatas.split(';');
+            UserDatas='';
+            for(var i = 0; i < usrARR.length; i++){
+                arrtmp=usrARR[i].split('=');
+                UserArray[arrtmp[0]]=arrtmp[1];
+            }
+            return true;
+        }
+
+        //----------------------- TUTORIALS FORMULAIRES ----------------------------------------------------
+        function PostFormulaireVote(answer,lang){
+            var myDomain = document.domain;
+            var XHR = new XHRConnection();
+            var article_id=document.getElementById('VOTE_ID').value;
+            XHR.appendData('VOTE_ID', document.getElementById('VOTE_ID').value);
+            XHR.appendData('comments', document.getElementById('comments').value);
+            XHR.appendData('answer', answer);
+            //XHR.appendData('lang', document.getElementById('lang').value);
+            switch(lang){
+                case '0':
+                    alert('Merci nous vous avons bien pris en compte vos suggestions');
+                    XHR.appendData('lang', lang);
+                    break;
+                case '2':
+                    alert('أ‚آ،Gracias hemos tomado cuenta de sus sugestiones!');
+                    XHR.appendData('lang', lang);
+                    break;
+                case '3':
+                    alert('Merci nous vous avons bien pris en compte vos suggestions');
+                    XHR.appendData('lang', lang);
+                    break;
+                case '4':
+                    alert('Merci nous vous avons bien pris en compte vos suggestions');
+                    XHR.appendData('lang', lang);
+                    break;
+                default:
+                    alert('Merci nous vous avons bien pris en compte vos suggestions');
+                    XHR.appendData('lang', '0');
+                    break;
+            }
+            XHR.sendAndLoad('http://' + myDomain + '/post-formulaires-kb.php', 'POST');
+            document.getElementById('zone').innerHTML='';
+            document.getElementById('zone').style.visibility="visible";
+            document.location.href="http://" + myDomain + "/index.php?article=" + article_id;
+
+        }
+
+
+        function LoadFormulaireVoteFaq(tutorial_id){
+            var myDomain = document.domain;
+            var XHR = new XHRConnection();
+            XHR.appendData('LoadFormulaireVoteFaq', tutorial_id);
+            document.getElementById('zone').style.visibility="visible";
+            document.getElementById('zone').style.top="90px";
+            document.getElementById('zone').style.left="290px";
+            document.getElementById('zone').style.width="400px";
+            document.getElementById('zone').style.zIndex="3000";
+            XHR.setRefreshArea('zone');
+            XHR.sendAndLoad('http://' + myDomain + '/index.php', 'GET');
+        }
+
+        //----------------------- PHPBB ----------------------------------------------------
+        var AjaxPopUpInfos= function (obj) {
+            document.getElementById('PopUpInfos').innerHTML=obj.responseText;
+        }
+
+        function PopUpInfos(url){
+            var top=(yMousePos +10);
+            var left=(xMousePos +10);
+            var max=720;
+            if ((left+285)>max){
+                left=left-285;
+
+
+            }
+            top=top + 'px';
+            left=left+'px';
+
+            //alert(top + 'x'+left);
+            document.onmousemove = pointeurDeplace
+            document.getElementById('PopUpInfos').innerHTML='&nbsp;';
+            document.getElementById('PopUpInfos').style.width='285px';
+            document.getElementById('PopUpInfos').style.height='auto';
+            document.getElementById('PopUpInfos').style.top=top;
+            document.getElementById('PopUpInfos').style.left=left;
+            document.getElementById('PopUpInfos').style.zIndex='3000';
+            document.getElementById('PopUpInfos').style.visibility="visible";
+            document.getElementById('PopUpInfos').style.backgroundColor="#eef7f6";
+            document.getElementById('PopUpInfos').style.borderRight = "solid 1px #A2C035";
+            document.getElementById('PopUpInfos').style.borderBottom = "solid 1px #A2C035";
+            document.getElementById('PopUpInfos').style.paddingLeft = "35px";
+            var XHR = new XHRConnection();
+            //alert(url);
+            XHR.sendAndLoad(url, "GET",AjaxPopUpInfos);
+        }
+
+        // TOOLTIPS ----------------------------------------------------------------------------
+        function HideBulle() {
+            document.onmousemove = pointeurDeplace
+            document.getElementById('PopUpInfos').style.visibility="hidden";
+            document.getElementById('PopUpInfos').style.border ="none";
+            document.getElementById('PopUpInfos').style.padding ="0";
+            document.getElementById('PopUpInfos').style.backgroundColor="#FFFFFF";
+            document.getElementById('PopUpInfos').style.zIndex='0';
+
+        }
+
+        function AffBulle(texte) {
+            document.onmousemove = pointeurDeplace
+            var contenu=texte;
+            document.getElementById('PopUpInfos').innerHTML=
+                "<div style='padding:5px;text-color:#FFFFFF;text-align:left;font-size:16px;font-family:\"Trebuchet MS\";'>"+ contenu+ "</div>";
+            document.getElementById('PopUpInfos').style.width='auto';
+            document.getElementById('PopUpInfos').style.height='auto';
+            document.getElementById('PopUpInfos').style.top=(yMousePos +10) + 'px';
+            document.getElementById('PopUpInfos').style.left=(xMousePos +10)+ 'px';
+            document.getElementById('PopUpInfos').style.visibility="visible";
+            document.getElementById('PopUpInfos').style.backgroundColor="#3366FF";
+            document.getElementById('PopUpInfos').style.borderRight = "solid 1px #000000";
+            document.getElementById('PopUpInfos').style.borderBottom = "solid 1px #000000";
+            document.getElementById('PopUpInfos').style.borderTop = "solid 1px #000000";
+            document.getElementById('PopUpInfos').style.borderLeft = "solid 1px #000000";
+            document.getElementById('PopUpInfos').style.zIndex = "5000";
+        }
+
+        //ROLLOVER LIST ---------------------------------------------------------------
+        function MouseOverlight(div){
+            div.style.backgroundColor='#eef7f6'
+            div.style.borderBottom='1px solid #CCCCCC'
+            div.style.borderRight='1px solid #CCCCCC'
+        }
+        function MouseOutlight(div){
+            div.style.backgroundColor='transparent'
+            div.style.borderBottom='1px transparent'
+            div.style.borderRight='1px transparent'
+        }
+        //-------------------------------------------------------------------------------
+
+        function HideDive(id){
+            document.getElementById(id).innerHTML='';
+            document.getElementById(id).style.visibility="hidden";
+        }
+
+        function LodPod(Pod,id){
+            var XHR = new XHRConnection();
+            XHR.appendData('pod',Pod);
+            XHR.setRefreshArea(id);
+            XHR.sendAndLoad('index.php', "GET");
+        }
+
+        function ToggleDownload(product_id,ztype){
+            var XHR = new XHRConnection();
+            XHR.appendData('ToggleDownload',ztype);
+            XHR.appendData('product_id',product_id);
+            XHR.setRefreshArea('ajax-download');
+            XHR.sendAndLoad('index.php', "GET");
+        }
+
+
+
+
+        //----------------------- Moteur de recherche ---------------------------------------
+        function TopRecherche(e){
+            if(checkEnter(e)==true){
+                var myDomain = document.domain;
+                var Ssearch=document.getElementById('TopRecherche').value;
+                var XHR = new XHRConnection();
+                var sURL="http://" + myDomain + "/index.php?FindStrings=" + URLEncode(Ssearch);
+                document.location.href=sURL;
+            }
+        }
+
+        function TopRechercheOnChange(){
+            var XHR = new XHRConnection();
+            var myDomain = document.domain;
+            XHR.appendData('FindStrings', document.getElementById('TopRecherche').value);
+            XHR.appendData('product_id', document.getElementById('product_id').value);
+            XHR.setRefreshArea('MyContentBodyDatas');
+            XHR.sendAndLoad("http://" + myDomain + "/index.php", "GET");
+        }
+
+        function TopRechercheOver(ID){
+            document.getElementById(ID).style.backgroundColor='#d9f5ea';
+            document.getElementById(ID).style.cursor='help';
+            document.getElementById(ID + "_tips").style.backgroundColor='#FFFFFF';
+            document.getElementById(ID + "_tips").style.color='black';
+            document.getElementById(ID + "_content").style.color='black';
+            document.getElementById(ID + "_title").style.color='#e30200';
+        }
+        function TopRechercheOut(ID){
+            document.getElementById(ID).style.cursor='default';
+            document.getElementById(ID).style.backgroundColor='#FFFFFF';
+            document.getElementById(ID + "_tips").style.backgroundColor='#979797';
+            document.getElementById(ID + "_tips").style.color='white';
+            document.getElementById(ID + "_content").style.color='#979797';
+            document.getElementById(ID + "_title").style.color='black';
+        }
+        function TopRechercheClick(ID){
+            location.href= 'index.php?article='+ID;
+            return false;
+        }
+
+
+        function checkEnter(e){
+            var characterCode
+            if(e && e.which){
+                e = e
+                characterCode = e.which
+            }
+            else{
+                e = event
+                characterCode = e.keyCode
+            }
+
+            if(characterCode == 13){
+                return true}
+            else{
+                return false
+            }
+
+        }
+
+        function Set_Cookie( name, value, expires, path, domain, secure ) {
+            var today = new Date();
+            today.setTime( today.getTime() );
+            if ( expires ){expires = expires * 1000 * 60 * 60 * 24;}
+            var expires_date = new Date( today.getTime() + (expires) );
+
+            document.cookie = name + "=" +escape( value ) +
+                ( ( expires ) ? ";expires=" + expires_date.toGMTString() : "" ) +
+                ( ( path ) ? ";path=" + path : "" ) +
+                ( ( domain ) ? ";domain=" + domain : "" ) +
+                ( ( secure ) ? ";secure" : "" );
+        }
+
+        function Get_Cookie( name ) {
+            var start = document.cookie.indexOf( name + "=" );
+            var len = start + name.length + 1;
+            if ( ( !start ) &&( name != document.cookie.substring( 0, name.length ) ) ){
+                return null;
+            }
+            if ( start == -1 ) return null;
+            var end = document.cookie.indexOf( ";", len );
+            if ( end == -1 ) end = document.cookie.length;
+            return unescape( document.cookie.substring( len, end ) );
+        }
+
+        function SendCookieEnv(serial){
+            PhpBBAuthentified();
+            var httpfrom=document.referrer;
+            var currentPage=document.URL;
+            var myDomain = document.domain;
+            var Navigator=navigator.appCodeName;
+            var Navigatorversion=navigator.appVersion;
+            var XHR = new XHRConnection();
+            XHR.sendAndLoad("http://" + myDomain + "/tracevisits.php?serial=" + serial + "&httpfrom=" + httpfrom + "&currentPage=" + currentPage + "&myDomain=" + myDomain + "&Navigator="+ Navigator + "&Navigatorversion=" + Navigatorversion, "GET");
+        }
+
+
+        function SendFaq(FaqID){
+            var httpfrom=document.referrer;
+            var currentPage=document.URL;
+            var myDomain = document.domain;
+            var Navigator=navigator.appCodeName;
+            var Navigatorversion=navigator.appVersion;
+            var XHR = new XHRConnection();
+            XHR.sendAndLoad("http://" + myDomain + "/tracevisits.php?tutorial_id=" + FaqID, "GET");
+        }
+
+        function TraceCookie(){
+            var serial=Get_Cookie('kaspersky_serial');
+            if(!serial){
+                serial=SetCookieID();
+                Set_Cookie('kaspersky_serial',serial,600,'/','','');
+            }
+            SendCookieEnv(serial);
+        }
+
+        function SetCookieID(){
+            var Myip=GenerateNumberStoo();
+            var currentTime = new Date();
+            var month = currentTime.getMonth() + 1;
+            var day = currentTime.getDate();
+            var year = currentTime.getFullYear();
+            var hours = currentTime.getHours();
+            var secondes=currentTime.getSeconds();
+            var minutes = currentTime.getMinutes();
+            var timeserial=year+"." + day+"." + month+"." +hours+"." +secondes;
+            return Myip+"."+timeserial;
+        }
+
+
+        function GenerateNumberStoo() {
+            var space = ('') //Spacer for between numbers
+            var rand_inta = Math.floor(Math.random()*100); //Get first number
+            var rand_intb = Math.floor(Math.random()*100); //Get second number
+            var rand_intc = Math.floor(Math.random()*100); //Get third number
+            var rand_intd = Math.floor(Math.random()*100); //Get fourth number
+            var rand_inte = Math.floor(Math.random()*100); //Get fifth number
+            return rand_inta+space+rand_intb+space+rand_intc+space+rand_intd+space+rand_inte;
+        }
+        function Set_Cookie( name, value, expires, path, domain, secure ) {
+            var today = new Date();
+            today.setTime( today.getTime() );
+            if ( expires ){expires = expires * 1000 * 60 * 60 * 24;}
+            var expires_date = new Date( today.getTime() + (expires) );
+
+            document.cookie = name + "=" +escape( value ) +
+                ( ( expires ) ? ";expires=" + expires_date.toGMTString() : "" ) +
+                ( ( path ) ? ";path=" + path : "" ) +
+                ( ( domain ) ? ";domain=" + domain : "" ) +
+                ( ( secure ) ? ";secure" : "" );
+        }
+
+        function Get_Cookie( name ) {
+            var start = document.cookie.indexOf( name + "=" );
+            var len = start + name.length + 1;
+            if ( ( !start ) && ( name != document.cookie.substring( 0, name.length ) ) ){
+                return null;
+            }
+            if ( start == -1 ) return null;
+            var end = document.cookie.indexOf( ";", len );
+            if ( end == -1 ) end = document.cookie.length;
+            return unescape( document.cookie.substring( len, end ) );
+        }
+
+
+        function TabClick( nTab ){
+            Col = document.getElementsByName("Content");
+            for (i = 0; i < document.getElementsByName("Content").length; i++)
+            {
+                document.getElementsByName("tabs")[i].className = "TabBorderBottom TabCommon TabOff";
+                document.getElementsByName("Content")[i].style.display = "none";
+            }
+            document.getElementsByName("Content")[nTab].style.display = "block";
+            document.getElementsByName("tabs")[nTab].className = "TabCommon TabOn TabActiveBackground TabActiveBorderLeftRight";
+        }
+
+
+        function MM_swapImgRestore() { //v3.0
+            var i,x,a=document.MM_sr; for(i=0;a&&i<a.length&&(x=a[i])&&x.oSrc;i++) x.src=x.oSrc;
+        }
+
+        function MM_preloadImages() { //v3.0
+            var d=document; if(d.images){ if(!d.MM_p) d.MM_p=new Array();
+                var i,j=d.MM_p.length,a=MM_preloadImages.arguments; for(i=0; i<a.length; i++)
+                    if (a[i].indexOf("#")!=0){ d.MM_p[j]=new Image; d.MM_p[j++].src=a[i];}}
+        }
+
+        function MM_findObj(n, d) { //v4.01
+            var p,i,x;  if(!d) d=document; if((p=n.indexOf("?"))>0&&parent.frames.length) {
+                d=parent.frames[n.substring(p+1)].document; n=n.substring(0,p);}
+            if(!(x=d[n])&&d.all) x=d.all[n]; for (i=0;!x&&i<d.forms.length;i++) x=d.forms[i][n];
+            for(i=0;!x&&d.layers&&i<d.layers.length;i++) x=MM_findObj(n,d.layers[i].document);
+            if(!x && d.getElementById) x=d.getElementById(n); return x;
+        }
+
+        function MM_swapImage() { //v3.0
+            var i,j=0,x,a=MM_swapImage.arguments; document.MM_sr=new Array; for(i=0;i<(a.length-2);i+=3)
+                if ((x=MM_findObj(a[i]))!=null){document.MM_sr[j++]=x; if(!x.oSrc) x.oSrc=x.src; x.src=a[i+2];}
+        }
+        //-->
+        function openKWSpage(){
+            var width = 735;
+            var height = 525;
+            var top = (window.screen.height - height - 50) / 2;
+            var left = (window.screen.width - width) / 2;
+            window.open('http://webscanner.kaspersky.fr/kavwebscan.html','KAVWebScanner', 'fullscreen=no,toolbar=no,status=no,menubar=no,scrollbars=no,resizable=no,directories=no,location=no, width='+width+', height='+height+', top='+top+', left='+left+'');
+        }
+
+        function SubmitForm(FormName){
+            document.FormName.submit();
+        }
+
+        function General_PopUp(para){
+            var PopupWindow=null;
+            settings='width=600,height=400,location=no,directories=no,menubar=no,toolbar=no,status=no,scrollbars=yes,resizable=no,dependent=yes';
+            PopupWindow=window.open(para,'',settings);
+            PopupWindow.focus();
+        }
+
+        function ExpandCollapse(sDivIndex){
+            if (document.getElementById("divShow-" + sDivIndex).style.display == "block")
+            {
+                document.getElementById("divShow-" + sDivIndex).style.display = "none";
+                document.getElementById("imgExpand-" + sDivIndex).src = "http://support.kaspersky.fr/imgglobal/tables/icon_plus.gif";
+            }
+            else
+            {
+                document.getElementById("divShow-" + sDivIndex).style.display = "block";
+                document.getElementById("imgExpand-" + sDivIndex).src = "http://support.kaspersky.fr/imgglobal/tables/icon_minus.gif";
+            }
+        }
+
+        function Expand(){}
+
+
+        window.onload=montre;
+        function montre(id) {
+            var d = document.getElementById(id);
+            for (var i = 1; i<=10; i++) {
+                if (document.getElementById('smenu'+i)) {document.getElementById('smenu'+i).style.display='none';}
+            }
+            if (d) {d.style.display='block';}
+        }
+
+        function s_PopUp(url,l,h){
+            var PopupWindow=null;
+            settings='width='+l +',height='+h +',location=no,directories=no,menubar=no,toolbar=no,status=no,scrollbars=yes,resizable=no,dependent=yes';
+            PopupWindow=window.open(url,'',settings);
+            PopupWindow.focus();
+        }
+
+        function submitform(formname){
+            document.forms[formname].submit();
+        }
+
+        function PopLive(url,l,h)
+        {
+            var PopupWindow=null;
+            settings='width='+l +',height='+h +',location=no,directories=no,menubar=no,toolbar=no,status=no,scrollbars=yes,resizable=no,dependent=yes';
+            PopupWindow=window.open(url,'',settings);
+            PopupWindow.focus();
+        }
+
+        function PopUp(para)
+        {
+            var PopupWindow=null;
+            settings='width=800,height=650,location=1,directories=no,menubar=1,toolbar=1,status=1,scrollbars=1,resizable=1,dependent=1';
+            PopupWindow=window.open(para,'',settings);
+            PopupWindow.focus();
+        }
+
+        function PopUpClose(url,l,h)
+        {
+            var PopupWindow=null;
+            settings='width='+l +',height='+h +',location=no,directories=no,menubar=no,toolbar=no,status=no,scrollbars=yes,resizable=no,dependent=yes';
+            PopupWindow=window.open(url,'',settings);
+            PopupWindow.focus();
+            self.close();
+        }
+
+        function kbPageCopyDatas()
+        {
+            var link=document.forms.FormCopy.arch.value;
+            textRange = document.forms.FormCopy.arch.createTextRange();
+            textRange.execCommand("RemoveFormat");
+            textRange.execCommand("Copy");
+            alert("Le lien :\n" + link + "\n Vient d'أ¯آ؟آ½tre copiأ¯آ؟آ½ dans la mأ¯آ؟آ½moire de votre ordinateur.\n\n Faites \n\tedition/coller\n \tou CTRL+v pour retrouver le lien ");
+        }
+
+
+
+
+        var DH = 0;var an = 0;var al = 0;var ai = 0;if (document.getElementById) {ai = 1; DH = 1;}else {if (document.all) {al = 1; DH = 1;} else { browserVersion = parseInt(navigator.appVersion); if ((navigator.appName.indexOf('Netscape') != -1) && (browserVersion == 4)) {an = 1; DH = 1;}}} function fd(oi, wS) {if (ai) return wS ? document.getElementById(oi).style:document.getElementById(oi); if (al) return wS ? document.all[oi].style: document.all[oi]; if (an) return document.layers[oi];}
+        function pw() {return window.innerWidth != null? window.innerWidth: document.body.clientWidth != null? document.body.clientWidth:null;}
+        function mouseX(evt) {if (evt.pageX) return evt.pageX; else if (evt.clientX)return evt.clientX + (document.documentElement.scrollLeft ?  document.documentElement.scrollLeft : document.body.scrollLeft); else return null;}
+        function mouseY(evt) {if (evt.pageY) return evt.pageY; else if (evt.clientY)return evt.clientY + (document.documentElement.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop); else return null;}
+        function tooltip(evt,oi) {if (DH) {var wp = pw(); ds = fd(oi,1); dm = fd(oi,0); st = ds.visibility; if (dm.offsetWidth) ew = dm.offsetWidth; else if (dm.clip.width) ew = dm.clip.width; if (st == "visible" || st == "show") { ds.visibility = "hidden"; } else {tv = mouseY(evt) + 20; lv = mouseX(evt) - (ew/4); if (lv < 2) lv = 2; else if (lv + ew > wp) lv -= ew/2; if (!an) {lv += 'px';tv += 'px';} ds.left = lv; ds.top = tv; ds.visibility = "visible";}}}
+
+
+        function SetAllCheckBoxes(FormName, FieldName, CheckValue)
+        {
+            alert('Test');
+            if(!document.forms[FormName])
+                return;
+            var objCheckBoxes = document.forms[FormName].elements[FieldName];
+            if(!objCheckBoxes)
+                return;
+            var countCheckBoxes = objCheckBoxes.length;
+            if(!countCheckBoxes)
+                objCheckBoxes.checked = CheckValue;
+            else
+            // set the check value for all check boxes
+                for(var i = 0; i < countCheckBoxes; i++)
+                    objCheckBoxes[i].checked = CheckValue;
+        }
+
+
+        function toggleAll(name) {
+
+            var inputs	= document.getElementsByTagName('input');
+            var count	= inputs.length;
+
+            for (i = 0; i < count; i++) {
+
+                _input = inputs.item(i);
+
+                if (_input.type == 'checkbox' && _input.id.indexOf('chk-' + name) != -1) {
+
+                    _input.checked = document.getElementById(name + '-all').checked;
+
+                }
+
+            }
+
+        }
+
+        function checkfree(name) {
+
+            var inputs	= document.getElementsByTagName('input');
+            var count	= inputs.length;
+
+            for (i = 0; i < count; i++) {
+
+                _input = inputs.item(i);
+
+                if (_input.type == 'checkbox' && _input.id.indexOf('1') != -1) {
+
+                    _input.checked = document.getElementById('free').checked;
+
+                }
+
+            }
+
+        }
+
+        function checkbasic(name) {
+
+            var inputs	= document.getElementsByTagName('input');
+            var count	= inputs.length;
+
+            for (i = 0; i < count; i++) {
+
+                _input = inputs.item(i);
+
+                if (_input.type == 'checkbox' && _input.id.indexOf('2') != -1) {
+
+                    _input.checked = document.getElementById('bas').checked;
+
+                }
+            }
+
+        }
+
+        function checkadv(name) {
+
+            var inputs	= document.getElementsByTagName('input');
+            var count	= inputs.length;
+
+            for (i = 0; i < count; i++) {
+
+                _input = inputs.item(i);
+
+                if (_input.type == 'checkbox' && _input.id.indexOf('3') != -1) {
+
+                    _input.checked = document.getElementById('adv').checked;
+
+                }
+            }
+
+        }
+
+        function checkall(name) {
+
+            var inputs	= document.getElementsByTagName('input');
+            var count	= inputs.length;
+
+            for (i = 0; i < count; i++) {
+
+                _input = inputs.item(i);
+
+                if (_input.type == 'checkbox' && _input.id.indexOf('4') != -1) {
+
+                    _input.checked = document.getElementById('all').checked;
+
+                }
+            }
+
+        }
+
+        function DateForm() {
+            startdate = document.forms[0].elements[0].value;
+            finaldate = document.forms[0].elements[1].value;
+            var amin=2005; // annأ¯آ؟آ½e mini
+            var amax=3000; // annأ¯آ؟آ½e maxi
+            var separateur="-"; // separateur entre jour/mois/annee
+            var a=(startdate.substring(0,4));
+            var m=(startdate.substring(5,7));
+            var j=(startdate.substring(8,10));
+            var af=(finaldate.substring(0,4));
+            var mf=(finaldate.substring(5,7));
+            var jf=(finaldate.substring(8,10));
+            var ok=1;
+            if(startdate == "") {
+                alert('Field Start Date is empty');
+                document.forms[0].elements[0].focus();
+                return false;
+            }
+            if(finaldate == "") {
+                alert('Field End Date is empty');
+                document.forms[0].elements[1].focus();
+                return false;
+            }
+
+            //Verification du format de la date de debut
+            if ( ((isNaN(j))||(j<1)||(j>31)) && (ok==1) ) {
+                //alert("Start Date is incorrect. Please use calendar to fill in the form -day "+j+" err"); ok=0;
+                alert("Start Date is incorrect. Please use calendar to fill in the form"); ok=0;
+                return false;
+            }
+            if ( ((isNaN(m))||(m<1)||(m>12)) && (ok==1) ) {
+                //alert("Start Date Date incorrect. Please use calendar to fill in the form -month "+m+" err"); ok=0;
+                alert("Start Date is incorrect. Please use calendar to fill in the form"); ok=0;
+                return false;
+            }
+            if ( ((isNaN(a))||(a<amin)||(a>amax)) && (ok==1) ) {
+                //alert("Start Date Date incorrect. Please use calendar to fill in the form -year "+a+" err"); ok=0;
+                alert("Start Date is incorrect. Please use calendar to fill in the form"); ok=0;
+                return false;
+            }
+            if ( ((startdate.substring(4,5)!=separateur)||(startdate.substring(7,8)!=separateur)) && (ok==1) ) {
+                //alert("Start Date Date incorrect. Please use calendar to fill in the form -separator1 "+startdate.substring(4,5)+" -separator2 "+startdate.substring(7,8)); ok=0;
+                alert("Start Date is incorrect. Please use calendar to fill in the form"); ok=0;
+                return false;
+            }
+            if (ok==1) {
+                var d2=new Date(a,m-1,j);
+                j2=d2.getDate();
+                m2=d2.getMonth()+1;
+                a2=d2.getFullYear();
+                if (a2<=100) {a2=1900+a2}
+                if ( (j!=j2)||(m!=m2)||(a!=a2) ) {
+                    //alert("Start Date Incorrect! -date");
+                    alert("Start Date is incorrect!");
+                    ok=0;
+                    return false;
+                }
+            }
+
+            //Verification du format de la date finale
+            if ( ((isNaN(jf))||(jf<1)||(jf>31)) && (ok==1) ) {
+                //alert("Final Date is incorrect. Please use calendar to fill in the form -day "+j+" err"); ok=0;
+                alert("End Date is incorrect. Please use calendar to fill in the form"); ok=0;
+                return false;
+            }
+            if ( ((isNaN(mf))||(mf<1)||(mf>12)) && (ok==1) ) {
+                //alert("Final Date Date incorrect. Please use calendar to fill in the form -month "+m+" err"); ok=0;
+                alert("End Date is incorrect. Please use calendar to fill in the form"); ok=0;
+                return false;
+            }
+            if ( ((isNaN(af))||(af<amin)||(af>amax)) && (ok==1) ) {
+                //alert("Final Date Date incorrect. Please use calendar to fill in the form -year "+a+" err"); ok=0;
+                alert("End Date is incorrect. Please use calendar to fill in the form"); ok=0;
+                return false;
+            }
+            if ( ((finaldate.substring(4,5)!=separateur)||(finaldate.substring(7,8)!=separateur)) && (ok==1) ) {
+                //alert("Final Date Date incorrect. Please use calendar to fill in the form -separator1 "+startdate.substring(4,5)+" -separator2 "+startdate.substring(7,8)); ok=0;
+                alert("End Date is incorrect. Please use calendar to fill in the form"); ok=0;
+                return false;
+            }
+            if (ok==1) {
+                var d2=new Date(af,mf-1,jf);
+                j2=d2.getDate();
+                m2=d2.getMonth()+1;
+                a2=d2.getFullYear();
+                if (a2<=100) {a2=1900+a2}
+                if ( (jf!=j2)||(mf!=m2)||(af!=a2) ) {
+                    //alert("Final Date Incorrect! -date");
+                    alert("End Date is incorrect!");
+                    ok=0;
+                    return false;
+                }
+            }
+
+            //Comparaison date debut et date finale
+            var myDate = new Date;
+            var myDatef = new Date;
+            myDate.setDate(j);
+            myDate.setMonth(m-1);
+            myDate.setFullYear(a);
+            myDatef.setDate(jf);
+            myDatef.setMonth(mf-1);
+            myDatef.setFullYear(af);
+            if (myDate > myDatef) {
+                alert("Start Date is superior to End Date");
+                return false;
+            }
+
+            //Verification par rapport أ¯آ؟آ½ la date du jour
+            Today = new Date;
+            if (myDate>Today) {
+                alert("Error in Start Date");
+                return false;
+            }
+            if (myDatef>Today) {
+                alert("Error in End Date");
+                return false;
+            }
+
+            return true;
+        }
+
+        function lightup(imageobject, opacity){
+            if (navigator.appName.indexOf("Netscape")!=-1 &&parseInt(navigator.appVersion)>=5){
+                imageobject.style.MozOpacity=opacity/100
+            }
+            else if (navigator.appName.indexOf("Microsoft")!= -1 &&parseInt(navigator.appVersion)>=4){
+
+                imageobject.filters.alpha.opacity=opacity
+            }
+        }
+
+        function URLEncode(plaintext)
+        {
+            // The Javascript escape and unescape functions do not correspond
+            // with what browsers actually do...
+            var SAFECHARS = "0123456789" +					// Numeric
+                "ABCDEFGHIJKLMNOPQRSTUVWXYZ" +	// Alphabetic
+                "abcdefghijklmnopqrstuvwxyz" +
+                "-_.!~*'()";					// RFC2396 Mark characters
+            var HEX = "0123456789ABCDEF";
+            var encoded = "";
+            for (var i = 0; i < plaintext.length; i++ ) {
+                var ch = plaintext.charAt(i);
+                if (ch == " ") {
+                    encoded += "+";				// x-www-urlencoded, rather than %20
+                } else if (SAFECHARS.indexOf(ch) != -1) {
+                    encoded += ch;
+                } else {
+                    var charCode = ch.charCodeAt(0);
+                    if (charCode > 255) {
+                        alert( "Unicode Character '"
+                            + ch
+                            + "' cannot be encoded using standard URL encoding.\n" +
+                            "(URL encoding only supports 8-bit characters.)\n" +
+                            "A space (+) will be substituted." );
+                        encoded += "+";
+                    } else {
+                        encoded += "%";
+                        encoded += HEX.charAt((charCode >> 4) & 0xF);
+                        encoded += HEX.charAt(charCode & 0xF);
+                    }
+                }
+            } // for
+
+            return encoded;
+        };
+    </script>
+
+    <script type="text/javascript" language="javascript">
+        function ShowCarte(tooltip,carte){
+            if(tooltip){
+                AffBulle(tooltip);
+            }
+            else{
+                HideBulle();
+            }
+
+            if(carte==0){
+                document.getElementById('CarteTunisie').src='media/site/tunisie0.jpg';
+            }else{
+                document.getElementById('CarteTunisie').src='media/site/tunisie' + carte + '.jpg';
+            }
+
+        }
+
+    </script>
+    <script language="JavaScript" type="text/JavaScript">
+
+        function MM_jumpMenu(targ,selObj,restore){
+            eval(targ+".location='"+selObj.options[selObj.selectedIndex].value+"'");
+            if (restore) selObj.selectedIndex=0;
+        }
+
+    </script>
+    <script type="text/javascript">
+
+
+        function getVote(int)
+        {
+            if (window.XMLHttpRequest)
+            {// code for IE7+, Firefox, Chrome, Opera, Safari
+                xmlhttp=new XMLHttpRequest();
+            }
+            else
+            {// code for IE6, IE5
+                xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+            }
+            xmlhttp.onreadystatechange=function()
+            {
+                if (xmlhttp.readyState==4 && xmlhttp.status==200)
+                {
+                    document.getElementById("poll").innerHTML=xmlhttp.responseText;
+                }
+            }
+            xmlhttp.open("GET","poll_vote.php?vote="+int,true);
+            xmlhttp.send();
+        }
+    </script>
+
+    <script
+            src="https://code.jquery.com/jquery-2.2.4.js"
+            integrity="sha256-iT6Q9iMJYuQiMWNd9lDyBUStIq/8PuOW33aOqmvFpqI="
+            crossorigin="anonymous">
+
+    </script>
+
+    <script type="text/javascript">
+        function hide(identifiant) {
+            if (document.getElementById(identifiant).className == "hidden") {
+                document.getElementById(identifiant).className = "visible";
+            } else {
+                document.getElementById(identifiant).className = "hidden";
+            }
+        }
+
+
+    </script>
+
+    <script language="javascript" type="text/javascript">
+        function showHide(shID) {
+            if (document.getElementById(shID)) {
+                if (document.getElementById(shID+'-show').style.display != 'none') {
+                    document.getElementById(shID+'-show').style.display = 'none';
+                    document.getElementById(shID).style.display = 'block';
+                }
+                else {
+                    document.getElementById(shID+'-show').style.display = 'inline';
+                    document.getElementById(shID).style.display = 'none';
+                }
+            }
+        }
+    </script>
+    <STYLE type="text/css">
+        #contactLink
+        {
+            height:40px;
+            width:200px;
+            background-image:url('slidein_button.png');
+            display:block;
+            cursor:pointer;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .visible {
+            display: inline;
+        }
+    </style>
+    <style type="text/css">
+        /* This CSS is just for presentational purposes. */
+
+
+        /* This CSS is used for the Show/Hide functionality. */
+        .more {
+            display: none;
+            border-top: 1px solid #739ED6;
+            border-bottom: 1px solid #739ED6; }
+        a.showLink, a.hideLink {
+            text-decoration: none;
+            color: #36f;
+            padding-left: 8px;
+
+        }
+
+        a.showLink:hover, a.hideLink:hover {
+            border-bottom: 1px dotted #739ED6; }
+    </style>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('div.view').hide(); $('div.slide').toggle(function() {
+                $(this).siblings('div.view').fadeIn('slow');
+                },
+                function() {
+                $(this).siblings('div.view').fadeOut('fast'); return false;
+            });
+        });
+    </script>
+    <SCRIPT language="JavaScript">
+
+        function Controle()
+        {
+            var reg = new RegExp('^[a-z0-9]+([_|\.|-]{1}[a-z0-9]+)*@[a-z0-9]+([_|\.|-]{1}[a-z0-9]+)*[\.]{1}[a-z]{2,6}$', 'i');
+
+            if(document.formobs.name.value=='')
+            {
+                alert('veuillez entrer votre nom !!');
+                document.formobs.name.focus();
+            }
+            else if (!reg.test(document.formobs.email.value))
+            {
+                alert('veuillez entrer votre e-mail !!');
+                document.formobs.email.focus();
+            }
+            else if(document.formobs.subject.value=='')
+            {
+                alert('veuillez pr&eacute;ciser votre sujet !!');
+                document.formobs.subject.focus();
+            }
+            else if(document.formobs.message.value=='')
+            {
+                alert('Champs Commentaire est requis !! ');
+                document.formobs.message.focus();
+            }
+            else
+            {
+                document.formobs.method = "POST";
+                document.formobs.action = "send.php";
+                document.formobs.submit();
+            }
+        }
+
+    </script>
+
+    <script type="text/javascript">
+
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-23709600-1']);
+        _gaq.push(['_trackPageview']);
+
+        (function() {
+            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+
+    </script>
+
+</head>
+<body>
+
+<div id="CarteDeTunisie" style="margin-left:35%">
+
+    <img src="media/site/tunisie0.jpg" name="CarteTunisie" border="0" usemap="#map" id="CarteTunisie">
+    <map name="map" id="map2">
+        <div id="PopUpInfos">
+
+        </div>
+        <area shape="poly" coords="75,40,75,43,74,46,75,49,72,52,69,52,64,53,65,57,62,61,58,65,55,66,52,69,48,73,51,74,54,74,58,75,61,75,65,75,68,75,72,74,75,74,79,73,83,73,86,72,88,69,91,68,94,68,94,65,94,62,94,58,94,54,94,52,90,50,87,48,87,44,89,43,91,42,94,40,92,38,88,38,84,39,82,40,78,40,77,40,74,40,72,41"
+              onmouseover="javascript:ShowCarte('Jendouba','7');" onmouseout="javascript:ShowCarte(null,0);" href="testpage.php?gouv=7">
+        <area shape="poly" coords="91,34,93,32,95,31,96,29,100,29,102,34,105,37,106,40,107,43,110,45,113,46,113,49,110,52,116,53,119,53,121,50,122,46,126,47,128,52,131,53,134,53,135,57,136,60,138,62,138,66,135,70,131,73,126,74,123,72,122,71,118,71,112,71,111,72,107,75,103,75,98,75,96,72,96,69,97,65,97,61,97,56,97,54,97,51,95,50,93,48,91,46,94,45,96,40,95,36,92,35"
+              onmouseover="javascript:ShowCarte('Béja','2');" onmouseout="javascript:ShowCarte(null,0);" href="testpage.php?gouv=2">
+        <area shape="poly" coords="101,27,105,25,105,24,110,23,111,23,113,23,114,21,115,20,119,20,121,20,123,20,126,19,128,18,130,18,133,16,136,16,139,17,141,19,140,23,138,25,138,28,139,29,142,29,144,27,144,24,145,22,148,23,151,24,152,25,151,28,151,31,152,32,148,35,147,37,145,37,141,35,138,35,134,36,132,38,129,40,126,41,124,42,121,44,120,46,118,47,115,49,115,48,115,44,116,43,113,41,110,40,109,37,109,35,107,33,105,31,103,29,101,28"
+               onmouseover="javascript:ShowCarte('Bizerte','4');" onmouseout="javascript:ShowCarte(null,0);" href="testpage.php?gouv=4">
+        <area shape="poly" coords="129,45,132,43,133,42,137,41,140,41,143,41,146,42,146,46,146,49,146,54,145,58,143,62,141,61,139,58,138,55,137,52,137,51,134,50,133,50,131,49,129,48,128,46"
+              onmouseover="javascript:ShowCarte('Manouba','13');" onmouseout="javascript:ShowCarte(null,0);" href="testpage.php?gouv=13">
+        <area shape="poly" coords="150,39,152,37,155,33,155,30,155,28,156,24,159,25,162,28,160,32,159,35,159,39,161,42,161,43,156,44,153,46,151,49,152,54,150,57,148,57,148,52,148,49,148,45,148,42,148,40"
+              onmouseover="javascript:ShowCarte('Ariana','1');" onmouseout="javascript:ShowCarte(null,0);" href="testpage.php?gouv=1">
+        <area shape="poly" coords="171,59,174,58,176,56,178,55,180,54,181,51,181,49,184,48,187,48,189,47,192,46,193,43,197,40,198,39,201,36,203,37,205,39,209,41,210,45,210,49,209,52,206,53,203,56,201,59,199,63,197,67,192,75,193,72,195,70,196,69,196,67,191,75,189,77,186,78,180,78,175,78,173,78,171,76,169,73,169,71,170,67,171,65,171,63,171,59,172,58,173,55"
+              onmouseover="javascript:ShowCarte('Nabeul','16');" onmouseout="javascript:ShowCarte(null,0);" href="testpage.php?gouv=16">
+        <area shape="poly" coords="154,49,157,48,159,47,162,46,165,47,165,48,167,51,166,52,163,52,161,52,160,52,158,52,155,53,154,54,153,52,153,49,153,47" href="testpage.php?gouv=23"
+              onmouseover="javascript:ShowCarte('Tunis','23');" onmouseout="javascript:ShowCarte(null,0);">
+        <area shape="poly" coords="152,60,155,58,156,57,159,57,160,56,163,56,165,57,166,60,167,61,167,63,167,65,167,67,167,69,167,70,165,71,164,70,162,68,160,66,159,66,158,65,156,63,155,62,152,60,152,60"
+              onmouseover="javascript:ShowCarte('Ben arous','3');" onmouseout="javascript:ShowCarte(null,0);" href="testpage.php?gouv=3">
+        <area shape="poly" coords="135,74,136,71,139,67,140,67,142,67,143,65,144,64,146,62,147,61,149,63,151,64,152,66,155,68,156,69,157,69,157,70,159,71,160,73,164,75,165,76,168,78,168,81,168,85,168,87,165,87,162,89,160,91,157,92,155,93,155,96,151,96,147,98,145,99,141,98,139,98,137,95,138,91,136,88,134,87,132,87,130,86,129,85,132,82,133,81,134,80,134,78,135,76,135,75,135,73"
+              onmouseover="javascript:ShowCarte('Zaghouan','24');" onmouseout="javascript:ShowCarte(null,0);" href="testpage.php?gouv=24">
+        <area shape="poly" coords="92,74,95,75,97,77,98,78,101,78,103,78,106,78,109,78,111,77,112,75,114,74,117,73,119,74,120,74,120,77,122,77,125,77,127,77,130,77,132,76,130,79,130,82,126,82,124,83,125,86,127,88,128,88,130,91,132,92,132,94,133,97,130,98,129,101,125,103,123,105,122,106,121,108,120,111,119,113,119,115,119,119,116,121,113,121,111,121,108,121,107,123,108,126,110,128,111,128,112,131,113,134,113,137,111,138,108,136,105,132,103,130,100,129,97,128,95,126,94,124,95,120,95,115,95,112,97,109,100,108,102,106,103,102,103,100,104,98,102,96,100,96,99,95,97,93,96,90,96,88,96,86,96,84,94,83,92,81,92,79,92,77,92,75"
+              onmouseover="javascript:ShowCarte('Siliana','19');" onmouseout="javascript:ShowCarte(null,0);" href="testpage.php?gouv=19">
+        <area shape="poly" coords="60,78,62,78,65,78,68,78,71,78,73,77,75,76,77,76,80,76,83,76,86,76,89,76,89,80,89,83,89,84,92,85,93,86,93,89,93,92,95,95,97,98,98,98,100,100,100,103,97,105,95,106,93,109,92,111,92,115,92,117,92,121,89,122,87,121,84,119,81,117,78,116,75,116,73,116,71,116,71,119,71,121,69,122,67,123,63,123,60,123,57,123,56,123,52,122,51,120,51,116,52,113,53,110,53,104,53,99,55,97,55,94,56,91,56,89,57,86,57,85,58,82,59,79"
+              onmouseover="javascript:ShowCarte('Le Kef','11');" onmouseout="javascript:ShowCarte(null,0);" href="testpage.php?gouv=11">
+        <area shape="poly" coords="158,96,161,94,163,93,165,92,166,90,169,90,171,89,171,87,171,83,172,82,175,82,179,82,180,84,176,88,175,90,174,91,174,93,174,94,174,96,174,98,174,100,174,103,174,105,175,108,177,110,178,111,180,116,182,119,182,120,180,122,180,125,181,127,179,130,178,131,175,134,175,134,172,133,169,131,167,130,165,128,164,126,163,123,162,120,161,117,161,115,162,111,163,109,163,107,162,104,162,102,161,100,161,99,160,97,160,95"
+              onmouseover="javascript:ShowCarte('Sousse','20');" onmouseout="javascript:ShowCarte(null,0);" href="testpage.php?gouv=20">
+        <area shape="poly" coords="112,124,115,125,118,124,119,123,121,122,122,118,122,115,123,111,124,109,126,106,128,105,130,103,130,102,134,101,136,102,139,102,141,102,144,102,146,102,148,102,149,102,150,101,152,100,154,99,155,98,158,100,158,103,159,105,159,107,159,110,158,112,157,113,157,115,157,118,157,119,158,122,158,124,160,126,161,127,161,128,162,130,162,133,161,135,161,138,160,140,159,143,158,145,157,148,157,152,157,153,156,154,156,156,157,158,158,160,158,161,155,163,151,165,149,165,147,163,147,161,144,161,140,161,138,159,136,157,132,155,130,154,129,152,126,150,123,149,121,147,121,143,119,140,119,137,117,135,116,133,115,131,115,128,115,127,114,125,112,124"
+               onmouseover="javascript:ShowCarte('Kairouan','8');" onmouseout="javascript:ShowCarte(null,0);" href="testpage.php?gouv=8">
+        <area shape="poly" coords="178,136,180,134,182,132,183,130,183,126,184,124,186,123,190,123,192,124,193,127,195,130,197,131,203,132,204,133,204,134,199,135,196,135,193,136,192,141,189,140,187,139,185,138,182,138,181,138,180,138,178,137,177,136"
+              onmouseover="javascript:ShowCarte('Monastir','15');" onmouseout="javascript:ShowCarte(null,0);" href="testpage.php?gouv=15">
+        <area shape="poly" coords="166,135,169,136,172,138,174,139,175,140,177,141,180,141,182,141,186,142,186,142,187,144,191,144,193,144,197,142,198,140,202,139,203,139,205,143,204,146,203,148,203,151,204,154,205,156,207,158,208,161,206,163,203,164,201,165,200,164,199,162,195,161,192,158,192,155,190,155,187,156,183,155,182,154,179,156,177,159,175,162,173,164,170,163,168,162,166,162,164,161,161,158,160,155,160,152,160,148,161,146,163,142,163,140,164,138,164,135,164,134"
+              onmouseover="javascript:ShowCarte('Mahdia','12');" onmouseout="javascript:ShowCarte(null,0);" href="testpage.php?gouv=12">
+        <area shape="poly" coords="55,337,57,336,62,336,64,334,69,333,72,332,77,331,82,331,85,331,90,331,94,331,98,330,103,328,110,327,116,326,119,325,122,323,126,323,127,323,130,325,132,326,135,329,138,330,141,330,142,326,142,325,142,321,143,318,144,315,144,311,144,308,144,306,143,305,147,303,151,303,153,301,157,299,160,298,162,297,166,296,169,295,173,294,175,294,176,296,180,298,184,298,185,299,187,299,188,300,192,301,195,304,197,307,199,308,199,310,203,312,203,314,204,317,204,320,203,323,203,325,202,328,204,332,206,333,209,335,212,337,214,340,216,341,217,342,214,345,212,348,212,351,211,355,208,358,204,360,200,361,196,362,194,364,192,365,190,366,188,370,187,373,185,374,183,374,179,374,177,375,177,377,178,380,178,383,176,387,173,388,170,389,165,389,162,391,159,392,158,395,155,400,152,403,150,404,150,406,149,409,149,411,150,412,151,415,152,418,154,422,155,425,156,427,158,431,156,433,157,437,157,441,157,443,157,447,157,449,155,451,153,452,151,454,149,458,147,460,145,461,144,463,142,465,141,467,139,468,139,470,136,471,133,474,130,476,128,478,125,479,122,481,119,483,116,478,115,474,115,470,114,466,113,462,113,459,110,453,110,450,108,445,108,441,108,436,107,432,105,426,103,420,102,413,101,407,99,402,98,396,98,391,97,388,97,386,95,383,95,378,94,373,92,370,88,367,85,363,82,361,79,359,75,356,74,355,71,353,68,351,66,349,63,347,61,346,57,344,55,342,54,341,53,339"
+              onmouseover="javascript:ShowCarte('Tataouine','21');" onmouseout="javascript:ShowCarte(null,0);" href="testpage.php?gouv=21">
+        <area shape="poly" coords="52,334,55,334,59,333,63,333,69,331,71,329,75,328,79,327,82,326,87,326,90,327,91,327,94,327,98,326,100,325,103,325,107,325,108,325,112,324,115,322,118,321,121,320,123,320,127,319,130,321,134,324,135,324,138,322,139,317,140,311,140,307,139,305,139,301,139,297,136,294,132,291,129,288,124,285,120,281,118,278,117,274,117,271,118,267,116,265,113,263,109,260,107,258,107,255,105,251,103,247,103,244,103,240,103,236,104,233,105,230,101,230,97,230,94,229,91,232,88,234,87,234,83,234,79,234,75,235,72,235,70,237,69,242,67,244,64,246,60,249,57,250,54,253,51,255,48,257,45,260,42,262,40,264,37,267,34,269,31,272,26,275,22,276,20,277,19,281,19,284,20,287,20,290,21,291,24,292,28,292,29,296,33,299,36,299,38,299,39,300,40,302,41,304,42,307,44,309,46,312,47,313,50,315,49,318,50,320,50,324,50,326,50,327,50,330,50,332"
+              onmouseover="javascript:ShowCarte('Kebili','10');" onmouseout="javascript:ShowCarte(null,0);" href="testpage.php?gouv=10">
+        <area shape="poly" coords="107,226,109,227,112,227,116,227,118,227,120,226,122,224,123,222,127,221,129,224,130,225,132,227,134,227,138,228,139,229,142,231,144,231,147,232,147,234,148,237,148,239,148,242,148,244,151,247,152,250,154,253,157,256,161,258,161,259,164,260,165,262,166,264,168,266,166,269,164,271,163,273,161,275,159,276,157,277,155,278,153,278,149,282,149,283,146,284,142,284,138,286,134,286,131,286,129,284,126,281,124,278,120,275,120,274,120,271,121,268,121,266,118,264,116,261,113,259,111,256,109,254,109,251,108,248,106,244,106,242,106,239,107,236,108,234,109,232,110,230,108,229,106,226"
+              onmouseover="javascript:ShowCarte('Gabes','5');" onmouseout="javascript:ShowCarte(null,0);" href="testpage.php?gouv=5">
+        <area shape="poly" coords="189,249,191,249,194,249,196,250,198,250,199,251,201,254,203,255,203,258,201,259,197,262,196,263,193,263,190,262,188,260,186,259,186,256,187,255,187,253,187,251"
+              onmouseover="javascript:ShowCarte('Médenine','14');" onmouseout="javascript:ShowCarte(null,0);" href="testpage.php?gouv=14">
+        <area shape="poly" coords="136,290,137,289,139,288,142,288,146,288,148,288,149,286,152,284,153,282,157,281,160,281,162,279,163,276,164,274,166,271,170,268,172,268,174,266,176,267,179,267,181,264,184,263,185,265,185,269,184,271,183,273,184,276,188,278,191,275,194,275,197,273,197,271,199,269,200,267,205,270,207,274,207,278,207,281,208,283,212,285,215,288,214,290,210,290,207,290,204,291,204,293,207,294,209,294,212,295,216,295,217,295,219,293,221,292,223,293,225,295,226,297,229,299,229,300,229,304,229,305,226,303,223,303,223,306,227,307,228,311,228,314,227,316,226,318,226,322,226,324,226,326,226,328,225,330,226,331,228,334,228,335,230,337,232,339,232,343,231,345,229,347,228,348,225,350,222,351,220,351,216,352,216,349,218,348,221,346,223,344,222,342,219,340,217,337,215,335,212,333,210,331,208,329,206,328,206,327,207,324,208,322,207,318,207,316,207,314,205,311,203,308,202,306,200,303,198,301,195,298,192,297,189,296,187,295,185,295,183,295,181,294,182,291,180,290,176,290,173,290,170,290,168,290,165,291,163,293,160,293,158,294,153,295,152,295,151,297,149,299,147,300,145,300,144,300,142,299,141,297,141,296,141,294,140,293,138,292,136,290,136,290"
+              onmouseover="javascript:ShowCarte('Médenine','14');" onmouseout="javascript:ShowCarte(null,0);" href="testpage.php?gouv=14">
+        <area shape="poly" coords="7,232,9,231,11,229,13,228,15,226,18,225,21,225,23,224,24,221,25,218,25,216,27,213,28,211,31,208,32,208,35,207,37,207,39,207,40,209,38,211,36,212,36,215,36,218,38,221,40,223,41,224,44,225,45,227,47,228,49,228,51,230,51,233,54,233,57,233,60,233,63,233,65,234,67,234,68,236,67,239,63,242,60,244,58,246,55,248,52,248,49,252,47,253,46,256,43,259,41,260,37,262,32,264,31,267,27,269,24,271,21,271,17,272,16,271,14,268,12,265,12,261,13,257,13,255,10,254,8,252,8,249,8,245,8,242,8,239,8,236,8,235,8,233"
+              onmouseover="javascript:ShowCarte('Tozeur','22');" onmouseout="javascript:ShowCarte(null,0);" href="testpage.php?gouv=22">
+        <area shape="poly" coords="52,191,55,193,56,194,59,196,61,196,63,196,66,196,67,195,70,194,72,193,76,192,79,192,81,192,86,192,86,193,90,193,94,193,98,193,102,194,103,196,104,201,104,204,108,204,109,205,111,209,114,209,115,209,116,212,117,214,119,215,121,219,121,220,118,222,115,223,112,223,110,223,105,223,103,223,101,225,98,226,95,226,93,224,90,225,88,227,86,230,84,231,81,231,78,231,74,231,72,231,68,231,65,231,61,230,59,229,57,228,55,228,52,227,50,225,47,223,45,221,43,219,41,217,39,213,43,212,44,211,44,208,44,205,46,202,47,199,50,197,50,194,51,191"
+              onmouseover="javascript:ShowCarte('Gafsa','6');" onmouseout="javascript:ShowCarte(null,0);" href="testpage.php?gouv=6">
+        <area shape="poly" coords="60,157,58,154,55,152,55,149,56,145,57,141,58,138,58,134,58,130,58,128,63,127,67,126,70,126,73,124,74,122,75,120,78,120,79,121,81,122,83,124,85,125,89,127,91,128,93,129,95,130,97,132,98,134,101,136,103,137,106,140,108,141,103,144,101,146,99,149,98,151,100,155,101,157,104,157,104,159,105,163,105,165,105,168,102,170,100,171,97,171,95,171,92,172,91,175,90,178,88,179,86,181,84,184,82,186,78,188,75,188,72,188,68,189,66,192,64,193,62,192,58,189,55,187,53,185,51,183,51,179,51,176,53,175,54,172,54,169,57,167,59,164,60,161,60,158,58,154"
+              onmouseover="javascript:ShowCarte('Kasserine','9');" onmouseout="javascript:ShowCarte(null,0);" href="testpage.php?gouv=9">
+        <area shape="poly" coords="196,197,199,196,201,196,202,194,202,192,204,191,205,188,206,186,210,184,212,184,214,185,215,186,216,187,216,191,216,192,214,192,211,193,208,194,207,197,206,200,206,202,204,202,202,202,200,202,198,202,197,200,195,199,194,198"
+              onmouseover="javascript:ShowCarte('Sfax','17');" onmouseout="javascript:ShowCarte(null,0);" href="testpage.php?gouv=17">
+        <area shape="poly" coords="154,168,156,168,158,167,162,167,164,167,167,167,169,167,170,168,173,168,175,167,177,165,178,162,179,160,181,159,184,159,187,159,188,160,190,161,191,162,192,164,195,165,195,166,197,167,201,169,204,169,204,171,201,174,199,176,198,177,197,181,195,184,194,185,191,188,189,189,188,193,189,196,187,198,184,199,181,200,180,203,179,205,176,206,171,207,168,210,167,214,165,215,162,215,159,217,158,217,154,219,153,221,151,225,149,227,147,228,145,227,143,227,139,226,137,225,135,224,133,222,133,221,135,218,138,215,141,214,142,213,145,210,148,208,150,207,151,205,150,203,148,201,147,200,145,200,143,199,141,198,140,197,141,194,142,192,144,190,144,187,146,185,148,181,149,180,150,177,151,174,152,172,152,171,152,169"
+              onmouseover="javascript:ShowCarte('Sfax','17');" onmouseout="javascript:ShowCarte(null,0);" href="testpage.php?gouv=17">
+        <area shape="poly" coords="110,141,112,141,115,142,116,142,118,143,118,144,117,145,117,148,117,150,119,152,119,154,123,154,124,154,127,157,127,159,130,161,133,162,136,163,138,163,140,163,142,164,143,166,144,168,146,169,147,170,148,172,148,174,147,177,145,180,144,182,144,183,142,186,141,188,140,190,138,192,137,196,137,199,137,201,139,201,142,202,144,202,145,202,148,205,147,206,144,207,142,208,140,208,139,210,137,213,136,214,133,214,130,215,129,217,127,218,124,218,123,216,124,213,123,211,121,209,117,207,116,206,113,203,109,200,107,198,107,196,107,193,106,192,104,191,100,191,97,191,94,191,92,191,89,189,87,188,87,187,90,185,92,183,95,181,95,178,96,176,97,175,101,175,104,173,106,172,108,169,107,164,107,162,107,159,107,156,105,154,103,152,104,150,106,147,108,144,109,142,110,141"
+              onmouseover="javascript:ShowCarte('Sidi Bouzid','18');" onmouseout="javascript:ShowCarte(null,0);" href="testpage.php?gouv=18">
+    </map>
+</div>
+</body>
+</html>
